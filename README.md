@@ -6,9 +6,9 @@
 Challenge for JUCR 
 
 Made with:
-clean architecture
-Jetpack compose
-Motion Layout
-Lottie animations 
-Hilt
+clean architecture,
+Jetpack compose,
+Motion Layout,
+Lottie animations ,
+Hilt,
 Coroutines
