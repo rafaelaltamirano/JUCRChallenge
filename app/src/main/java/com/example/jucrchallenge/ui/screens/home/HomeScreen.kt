@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Velocity
@@ -36,6 +37,14 @@ EXPANDED,
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMotionApi::class)
 @Composable
 fun HomeScreen (){
+    val context = LocalContext.current
+    val motionScene = remember {
+        context.resources
+            .openRawResource(R.raw.motion_scene)
+            .readBytes()
+            .decodeToString()
+    }
+
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -108,78 +117,9 @@ fun HomeScreen (){
                     val startHeightNum = 300
                     MotionLayout(
                         modifier = Modifier.fillMaxSize(),
-                        start = ConstraintSet {
-                            val header = createRefFor("header")
-                            val body = createRefFor("body")
-                            val content1 = createRefFor("content1")
-                            val content2 = createRefFor("content2")
-                            val content3 = createRefFor("content3")
-                            constrain(header) {
-                                this.width = Dimension.matchParent
-                                this.height = Dimension.value(300.dp)
-                            }
-                            constrain(body) {
-                                this.width = Dimension.matchParent
-                                this.height = Dimension.fillToConstraints
-                                this.top.linkTo(header.bottom, 0.dp)
-                                this.bottom.linkTo(parent.bottom, 0.dp)
-                            }
-                            constrain(content1) {
-                                this.start.linkTo(header.start)
-                                this.end.linkTo(header.end)
-                                this.top.linkTo(header.top, 24.dp)
-                                this.bottom.linkTo(content2.top, 12.dp)
-                                this.height = Dimension.fillToConstraints
-                            }
-                            constrain(content2) {
-                                this.start.linkTo(header.start)
-                                this.end.linkTo(header.end)
-                                this.bottom.linkTo(header.bottom, 24.dp)
-                            }
-                            constrain(content3) {
-                                this.start.linkTo(header.start )
-                                this.end.linkTo(header.end,604.dp)
-                                this.bottom.linkTo(header.bottom)
-                            }
-                        },
-                        end = ConstraintSet {
-                            val header = createRefFor("header")
-                            val body = createRefFor("body")
-                            val content1 = createRefFor("content1")
-                            val content2 = createRefFor("content2")
-                            val content3 = createRefFor("content3")
-                            constrain(header) {
-                                this.height = Dimension.value(60.dp)
-                            }
-                            constrain(body) {
-                                this.width = Dimension.matchParent
-                                this.height = Dimension.fillToConstraints
-                                this.top.linkTo(header.bottom, 0.dp)
-                                this.bottom.linkTo(parent.bottom, 0.dp)
-                            }
-                            constrain(content1) {
-                                this.start.linkTo(content3.end, 100.dp)
-                                this.bottom.linkTo(header.bottom,8.dp)
-                                this.top.linkTo(header.top,8.dp)
-                                this.height = Dimension.fillToConstraints
-                            }
-
-                            constrain(content2) {
-                                this.start.linkTo(header.start, 24.dp)
-                                this.top.linkTo(header.top, 8.dp)
-                                this.bottom.linkTo(header.bottom, 8.dp)
-                            }
-
-                            constrain(content3) {
-                                this.start.linkTo(header.start, 24.dp)
-                                this.top.linkTo(header.top, 8.dp)
-                                this.bottom.linkTo(header.bottom, 8.dp)
-                            }
-                        },
+                        motionScene = MotionScene(content = motionScene),
                         progress = computedProgress,
                     ) {
-
-
                         Box(
                             modifier = Modifier
                                 .layoutId("body")
@@ -225,6 +165,7 @@ fun HomeScreen (){
 
                         }
 
+
                         Image(
                             painter = painterResource(R.drawable.tesla_x_white),
                             contentDescription = "My Image",
@@ -238,9 +179,9 @@ fun HomeScreen (){
                             text = "TIME TO END OF CHANGE: 49 Min",
                             color = Color.White,
 
-                                    modifier = Modifier
+                            modifier = Modifier
                                 .layoutId("content2")
-                                        .alpha(  alpha = 1f - computedProgress,)
+                                .alpha(  alpha = 1f - computedProgress,)
 
                         )
 
@@ -250,9 +191,8 @@ fun HomeScreen (){
 
                             modifier = Modifier
                                 .layoutId("content3")
-
-
                         )
+
                     }
                 }
             }

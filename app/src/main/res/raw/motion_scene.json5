@@ -1,0 +1,80 @@
+{
+  ConstraintSets: {
+    start: {
+      header: {
+        width: 'parent',
+        height: 'spread'
+      },
+      body: {
+        width: 'parent',
+        height: 'spread',
+        top: ['header', 'bottom'],
+        bottom: ['parent', 'bottom']
+      },
+      content1: {
+        start: ['header', 'start'],
+        end: ['header', 'end'],
+        top: ['header', 'top', 24],
+        bottom: ['content2', 'top', 12],
+        width: 'parent',
+      },
+      content2: {
+        start: ['header', 'start'],
+        end: ['header', 'end'],
+        bottom: ['header', 'bottom', 24]
+      },
+      content3: {
+        start: ['header', 'start'],
+        end: ['header', 'end', 604],
+        bottom: ['header', 'bottom']
+      }
+    },
+    end: {
+      header: {
+        height: 60
+      },
+      body: {
+        width: 'parent',
+        height: 'spread',
+        top: ['header', 'bottom'],
+        bottom: ['parent', 'bottom']
+      },
+      content1: {
+        start: ['content3', 'end', 130],
+        bottom: ['header', 'bottom', 8],
+        top: ['header', 'top', 8],
+        width: 120,
+      },
+      content2: {
+        start: ['header', 'start', 24],
+        top: ['header', 'top', 8],
+        bottom: ['header', 'bottom', 8]
+      },
+      content3: {
+        start:['header','start' ,24],
+        top:['header','top' ,8],
+        bottom:['header','bottom' ,8]
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startHorizontal',
+      KeyFrames: {
+        KeyAttributes: [
+          {
+            target: ['content1'],
+            frames: [0, 100]
+          },
+          {
+            target: ['content2'],
+            frames: [0, 50, 100],
+            translationX: [0, 70, 0],
+          }
+        ]
+      },
+    }
+  }
+}
