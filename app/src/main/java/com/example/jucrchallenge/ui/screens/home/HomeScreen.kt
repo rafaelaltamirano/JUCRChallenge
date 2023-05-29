@@ -29,6 +29,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.*
 import com.example.jucrchallenge.R
 import com.example.jucrchallenge.ui.component.AvailableSpaceView
+import com.example.jucrchallenge.ui.component.MergedLazyColumn
+import com.example.jucrchallenge.ui.component.NearbyPointsList
 import com.example.jucrchallenge.ui.theme.Primary
 
 enum class SwipingStates {
@@ -117,29 +119,36 @@ fun HomeScreen() {
                             .fillMaxWidth()
                             .background(Color.White, RoundedCornerShape(12.dp))
                     ) {
-                        //content, not necessarily scrollable or list
                         LazyColumn(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            items(200, key = { it }) {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(24.dp)
-                                        .fillMaxWidth()
-                                        .background(
-                                            Color.White, RoundedCornerShape(12.dp)
-                                        )
-                                        .border(
-                                            BorderStroke(
-                                                2.dp, Color.Gray
-                                            ), RoundedCornerShape(12.dp)
-                                        )
-                                        .padding(50.dp), contentAlignment = Alignment.Center
-                                ) {
-                                    Text(it.toString())
-                                }
-                            }
+                            item{  MergedLazyColumn()}
+                            NearbyPointsList()
+
                         }
+                        //content, not necessarily scrollable or list
+//                        LazyColumn(
+//                            modifier = Modifier.fillMaxSize()
+//                        ) {
+//                            items(200, key = { it }) {
+//                                Box(
+//                                    modifier = Modifier
+//                                        .padding(24.dp)
+//                                        .fillMaxWidth()
+//                                        .background(
+//                                            Color.White, RoundedCornerShape(12.dp)
+//                                        )
+//                                        .border(
+//                                            BorderStroke(
+//                                                2.dp, Color.Gray
+//                                            ), RoundedCornerShape(12.dp)
+//                                        )
+//                                        .padding(50.dp), contentAlignment = Alignment.Center
+//                                ) {
+//                                    Text(it.toString())
+//                                }
+//                            }
+//                        }
                     }
 
                     Box(
