@@ -13,7 +13,7 @@
       },
       circle: {
         width: 'parent',
-        top: ['parent', 'top',230],
+        top: ['parent', 'top',215],
         start: ['parent', 'start'],
         end: ['parent', 'end']
       },
@@ -21,7 +21,7 @@
         width: 'parent',
         height: 30,
         top: ['header', 'bottom'],
-        bottom: ['body', 'top']
+        bottom: ['body', 'top',30]
       },
       welcome_message: {
         start: ['header', 'start'],

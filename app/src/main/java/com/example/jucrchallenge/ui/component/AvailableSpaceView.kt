@@ -20,12 +20,10 @@ class AvailableSpaceView(context: Context) : RelativeLayout(context) {
     private fun pause() {
         lottie.pauseAnimation()
         dispose()
-       // lottie.progress = available
     }
 
     fun setAvailable(@FloatRange(from = 0.0, to = 1.0) available: Float) {
         this.available = available
-//        lottie.reverseAnimationSpeed()
         var frame = 0
         lottie.addAnimatorUpdateListener {
             val percentage = 1f - it.animatedFraction

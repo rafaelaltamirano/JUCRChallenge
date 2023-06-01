@@ -29,8 +29,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.*
 import com.example.jucrchallenge.R
 import com.example.jucrchallenge.ui.component.AvailableSpaceView
-import com.example.jucrchallenge.ui.component.MergedLazyColumn
-import com.example.jucrchallenge.ui.component.NearbyPointsList
+import com.example.jucrchallenge.ui.component.LazyItemsRow
+import com.example.jucrchallenge.ui.component.StatisticsTopBar
+import com.example.jucrchallenge.ui.component.nearbyPointsList
 import com.example.jucrchallenge.ui.theme.Primary
 
 enum class SwipingStates {
@@ -88,7 +89,7 @@ fun HomeScreen() {
                 }
             }
 
-            Box(//root container
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .swipeable(
@@ -113,42 +114,27 @@ fun HomeScreen() {
                     motionScene = MotionScene(content = motionScene),
                     progress = computedProgress,
                 ) {
+
                     Box(
                         modifier = Modifier
                             .layoutId("body")
+                            .padding(horizontal = 16.dp)
                             .fillMaxWidth()
                             .background(Color.White, RoundedCornerShape(12.dp))
                     ) {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            item{  MergedLazyColumn()}
-                            NearbyPointsList()
+                            items(1) {StatisticsTopBar("Statistics")}
+                            item{  LazyItemsRow()}
+                            items(1) {
+                                Spacer(Modifier.height(24.dp))
+                                StatisticsTopBar("Nearby supercharges","View all")
+                                Spacer(Modifier.height(12.dp))
+                            }
+                            nearbyPointsList()
 
                         }
-                        //content, not necessarily scrollable or list
-//                        LazyColumn(
-//                            modifier = Modifier.fillMaxSize()
-//                        ) {
-//                            items(200, key = { it }) {
-//                                Box(
-//                                    modifier = Modifier
-//                                        .padding(24.dp)
-//                                        .fillMaxWidth()
-//                                        .background(
-//                                            Color.White, RoundedCornerShape(12.dp)
-//                                        )
-//                                        .border(
-//                                            BorderStroke(
-//                                                2.dp, Color.Gray
-//                                            ), RoundedCornerShape(12.dp)
-//                                        )
-//                                        .padding(50.dp), contentAlignment = Alignment.Center
-//                                ) {
-//                                    Text(it.toString())
-//                                }
-//                            }
-//                        }
                     }
 
                     Box(
@@ -157,9 +143,7 @@ fun HomeScreen() {
                             .fillMaxWidth()
                             .height(startHeightNum.dp)
                             .background(Primary)
-                    ) {
-
-                    }
+                    )
 
                     Box(
                         modifier = Modifier
