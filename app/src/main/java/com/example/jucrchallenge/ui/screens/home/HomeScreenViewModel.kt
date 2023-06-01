@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.jucrchallenge.domain.entities.Car
+import com.example.jucrchallenge.domain.entities.SuperCharges
 import com.example.jucrchallenge.ui.ViewModelWithStatus
 import com.example.jucrchallenge.usecases.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,7 @@ class HomeScreenViewModel @Inject constructor(
 
     init {
         requestCar()
+        requestCharges()
     }
 
     private fun setLoading(loading: Boolean) {
@@ -35,6 +37,10 @@ class HomeScreenViewModel @Inject constructor(
         state = state.copy(car = car)
     }
 
+    private fun setSuperCharges(listSuperCharges: List<SuperCharges>) {
+        state = state.copy(listSuperCharges = listSuperCharges)
+    }
+
 
     private fun requestCar() = viewModelScope.launch {
         try {
@@ -42,6 +48,19 @@ class HomeScreenViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 homeUseCase.getCar()
             }.also { setCar(it) }
+        } catch (e: Exception) {
+            handleNetworkError(e)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    private fun requestCharges() = viewModelScope.launch {
+        try {
+            setLoading(true)
+            withContext(Dispatchers.IO) {
+                homeUseCase.getSuperCharges()
+            }.also { setSuperCharges(it) }
         } catch (e: Exception) {
             handleNetworkError(e)
         } finally {

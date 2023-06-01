@@ -144,7 +144,7 @@ fun HomeScreen(homeModel: HomeScreenViewModel, mainModel: MainModel) {
                                     )
                                     Spacer(Modifier.height(12.dp))
                                 }
-                                nearbyPointsList("Calle 123", "4/10", 12.3f)
+                                nearbyPointsList(homeState.listSuperCharges)
                             }
                         }
 

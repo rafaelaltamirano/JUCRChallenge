@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -22,15 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jucrchallenge.R
+import com.example.jucrchallenge.domain.entities.SuperCharges
 import com.example.jucrchallenge.ui.theme.GrayLight
 
-
-sealed class UiText(){
-    data class StringResource(@StringRes val id: Int,val args: List<Any>):UiText()
-}
-
-fun LazyListScope.nearbyPointsList(title: String,available: String, kms: Float) {
-    items(20) {
+fun LazyListScope.nearbyPointsList(item: List<SuperCharges>) {
+    items(item) {
         Card(
             shape = RoundedCornerShape(0),
             elevation = 0.dp,
@@ -49,14 +46,14 @@ fun LazyListScope.nearbyPointsList(title: String,available: String, kms: Float) 
             ) {
                 Column() {
                     Text(
-                        text = title,
+                        text = it.address,
                         color = Color.Black,
                         style = MaterialTheme.typography.h3,
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
                         modifier = Modifier.alpha(0.6f),
-                        text = stringResource(R.string.available,available),
+                        text = stringResource(R.string.available,it.total,it.total),
                         color = Color.Black,
                         style = MaterialTheme.typography.caption,
                     )
@@ -69,17 +66,18 @@ fun LazyListScope.nearbyPointsList(title: String,available: String, kms: Float) 
                 Column(
                     Modifier
                         .padding(10.dp)
-                        .alpha(0.4f)
+                        .alpha(0.4f),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
-                        painter = if(kms > 1.5f) painterResource(R.drawable.ic_location_lightning) else painterResource(R.drawable.ic_location_haert),
+                        painter = if(it.kms > 1.5f) painterResource(R.drawable.ic_location_lightning) else painterResource(R.drawable.ic_location_haert),
                         modifier = Modifier
                             .size((30.dp))
                             .padding(2.dp),
                         contentDescription = "My Image",
                     )
                     Text(
-                        text = stringResource(R.string.kms,kms.toString()),
+                        text = stringResource(R.string.kms,it.kms),
                         color = Color.Black,
                         style = MaterialTheme.typography.caption,
                     )
