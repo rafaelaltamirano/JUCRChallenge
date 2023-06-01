@@ -21,6 +21,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -122,18 +123,21 @@ fun HomeScreen() {
                             .fillMaxWidth()
                             .background(Color.White, RoundedCornerShape(12.dp))
                     ) {
+                        //Merged lazy column with lazy row and lazy column inside
                         LazyColumn(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            items(1) {StatisticsTopBar("Statistics")}
+                            items(1) {
+                                StatisticsTopBar(stringResource(R.string.statistics))
+                                Spacer(Modifier.height(24.dp))
+                            }
                             item{  LazyItemsRow()}
                             items(1) {
                                 Spacer(Modifier.height(24.dp))
-                                StatisticsTopBar("Nearby supercharges","View all")
+                                StatisticsTopBar(stringResource(R.string.nearby_supercharges),"View all")
                                 Spacer(Modifier.height(12.dp))
                             }
-                            nearbyPointsList()
-
+                            nearbyPointsList("Calle 123", "4/10", 12.3f)
                         }
                     }
 
@@ -197,17 +201,18 @@ fun HomeScreen() {
                         }
                     }
                     Text(
-                        text = "Good Morning Billy",
+                        text = stringResource(R.string.good_morning,"Billy"),
                         color = Color.White,
+                        style = MaterialTheme.typography.body1,
                         modifier = Modifier
                             .layoutId("welcome_message")
                             .alpha(alpha = 1f - computedProgress)
 
                     )
                     Text(
-                        text = "Charging your car...",
+                        text = stringResource(R.string.charging_car),
                         color = Color.White,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.h1,
                         fontSize = 20.sp,
                         modifier = Modifier
                             .layoutId("charging_message")
@@ -216,23 +221,21 @@ fun HomeScreen() {
                     )
                     Image(
                         painter = painterResource(R.drawable.tesla_x_white),
-                        contentDescription = "My Image",
-
+                        contentDescription = "My car",
                         modifier = Modifier
                             .width(250.dp)
                             .height(80.dp)
                             .layoutId("content1")
-
                     )
 
 
                     Text(
-                        text = "TIME TO END OF CHANGE: 49 Min",
+                        text = stringResource(R.string.time_to_end,49.toString()),
                         color = Color.White,
+                        style = MaterialTheme.typography.body2,
                         modifier = Modifier
                             .layoutId("time_charge")
                             .alpha(alpha = 1f - computedProgress)
-
                     )
 
 
@@ -241,14 +244,14 @@ fun HomeScreen() {
                     ) {
                         Text(
                             text = "Tesla Model X",
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.h3,
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
                         )
                         Text(
-                            text = "49 Min to End",
+                            text = stringResource(R.string.time_to_end_second,49.toString()),
                             color = Color.White,
-
+                            style = MaterialTheme.typography.body2,
                             )
                     }
 
