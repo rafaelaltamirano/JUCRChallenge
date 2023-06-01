@@ -1,4 +1,4 @@
-package com.example.jucrchallenge.ui.component
+package com.example.jucrchallenge.ui.animations
 
 import android.content.Context
 import android.widget.RelativeLayout

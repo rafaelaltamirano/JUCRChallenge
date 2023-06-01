@@ -1,4 +1,7 @@
 package com.example.jucrchallenge.domain.entities
 
-class Car {
-}
+data class Car (
+    val carModel: Int,
+    val scale: String,
+    val quantity: String,
+)

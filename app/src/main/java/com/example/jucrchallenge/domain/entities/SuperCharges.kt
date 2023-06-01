@@ -1,4 +1,8 @@
 package com.example.jucrchallenge.domain.entities
 
-class SuperCharges {
-}
+data class SuperCharges (
+    val address: String,
+    val available: Int,
+    val total: Int,
+    val kms: Float,
+)

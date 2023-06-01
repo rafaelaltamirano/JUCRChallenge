@@ -1,4 +1,8 @@
 package com.example.jucrchallenge.ui.screens.home
 
-class HomeState {
-}
+import com.example.jucrchallenge.domain.entities.User
+
+
+data class HomeState(
+    val loading: Boolean = false
+)

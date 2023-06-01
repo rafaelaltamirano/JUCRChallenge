@@ -1,4 +1,7 @@
 package com.example.jucrchallenge.data.dao
 
+import com.example.jucrchallenge.domain.entities.User
+
 interface UserDao {
+    suspend fun getUser(): User
 }

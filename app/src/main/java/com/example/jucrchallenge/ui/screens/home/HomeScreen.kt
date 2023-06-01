@@ -28,8 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.*
+import com.example.jucrchallenge.MainModel
 import com.example.jucrchallenge.R
-import com.example.jucrchallenge.ui.component.AvailableSpaceView
+import com.example.jucrchallenge.ui.animations.AvailableSpaceView
 import com.example.jucrchallenge.ui.component.LazyItemsRow
 import com.example.jucrchallenge.ui.component.StatisticsTopBar
 import com.example.jucrchallenge.ui.component.nearbyPointsList
@@ -43,7 +44,9 @@ enum class SwipingStates {
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMotionApi::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(homeModel: HomeScreenViewModel, mainModel: MainModel) {
+
+    val mainState = mainModel.state
     val context = LocalContext.current
     val realAvailable = 1f - 0.7f
     val motionScene = remember {
@@ -131,10 +134,12 @@ fun HomeScreen() {
                                 StatisticsTopBar(stringResource(R.string.statistics))
                                 Spacer(Modifier.height(24.dp))
                             }
-                            item{  LazyItemsRow()}
+                            item { LazyItemsRow() }
                             items(1) {
                                 Spacer(Modifier.height(24.dp))
-                                StatisticsTopBar(stringResource(R.string.nearby_supercharges),"View all")
+                                StatisticsTopBar(
+                                    stringResource(R.string.nearby_supercharges), "View all"
+                                )
                                 Spacer(Modifier.height(12.dp))
                             }
                             nearbyPointsList("Calle 123", "4/10", 12.3f)
@@ -201,7 +206,7 @@ fun HomeScreen() {
                         }
                     }
                     Text(
-                        text = stringResource(R.string.good_morning,"Billy"),
+                        text = stringResource(R.string.good_morning, mainState.user?.firstName ?: ""),
                         color = Color.White,
                         style = MaterialTheme.typography.body1,
                         modifier = Modifier
@@ -230,7 +235,7 @@ fun HomeScreen() {
 
 
                     Text(
-                        text = stringResource(R.string.time_to_end,49.toString()),
+                        text = stringResource(R.string.time_to_end, 49.toString()),
                         color = Color.White,
                         style = MaterialTheme.typography.body2,
                         modifier = Modifier
@@ -249,13 +254,11 @@ fun HomeScreen() {
                             color = Color.White,
                         )
                         Text(
-                            text = stringResource(R.string.time_to_end_second,49.toString()),
+                            text = stringResource(R.string.time_to_end_second, 49.toString()),
                             color = Color.White,
                             style = MaterialTheme.typography.body2,
-                            )
+                        )
                     }
-
-
                 }
             }
         }

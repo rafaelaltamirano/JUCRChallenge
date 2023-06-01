@@ -1,0 +1,9 @@
+{
+  "id": "123456",
+  "email": "example@example.com",
+  "password": "mypassword",
+  "firstName": "John",
+  "lastName": "Doe",
+  "address": "123 Street",
+  "carModel": "Toyota Corolla"
+}
