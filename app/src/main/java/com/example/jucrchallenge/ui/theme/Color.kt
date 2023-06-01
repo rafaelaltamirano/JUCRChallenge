@@ -12,7 +12,7 @@ val Accent = Color(0xFF002F41)
 val Secondary = Color(0xFF002F41)
 
 val Success = Color(0xFFAFD468)
-val Error = Color(0xFFE84360)
+val Danger = Color(0xFFE84360)
 val Warning = Color(0xFFF4B759)
 
 val GrayLight = Color(0xFFFAFAFA)

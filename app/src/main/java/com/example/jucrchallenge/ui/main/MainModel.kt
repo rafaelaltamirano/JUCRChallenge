@@ -1,4 +1,4 @@
-package com.example.jucrchallenge
+package com.example.jucrchallenge.ui.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -11,8 +11,11 @@
     <string name="time_to_end">TIME TO END OF CHANGE: %1$s Min</string>
     <string name="time_to_end_second">%1$s Min to End</string>
     <string name="car_model">Tesla Model X</string>
-    <string name="n_volt">%1$s Volt</string>
+    <string name="n_volt">%1$s %1$s</string>
     <string name="remaining_charge">Remaining charge</string>
     <string name="voltage">Voltage</string>
     <string name="fast_charge">Fast charge</string>
+    <string name="km">Km</string>
+    <string name="volt">Volt</string>
+    <string name="min">Min</string>
 </resources>

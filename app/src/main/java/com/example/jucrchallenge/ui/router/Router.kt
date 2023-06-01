@@ -5,7 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.jucrchallenge.MainModel
+import com.example.jucrchallenge.ui.main.MainModel
 import com.example.jucrchallenge.ui.screens.home.HomeScreen
 import com.example.jucrchallenge.ui.screens.home.HomeScreenViewModel
 

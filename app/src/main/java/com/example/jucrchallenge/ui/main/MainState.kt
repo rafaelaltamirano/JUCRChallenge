@@ -1,4 +1,4 @@
-package com.example.jucrchallenge
+package com.example.jucrchallenge.ui.main
 
 import com.example.jucrchallenge.domain.entities.User
 

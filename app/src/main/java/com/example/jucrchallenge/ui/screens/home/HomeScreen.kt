@@ -28,18 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.*
-import com.example.jucrchallenge.MainModel
+import com.example.jucrchallenge.ui.main.MainModel
 import com.example.jucrchallenge.R
+import com.example.jucrchallenge.domain.enum.SwipingStates
 import com.example.jucrchallenge.ui.animations.AvailableSpaceView
 import com.example.jucrchallenge.ui.component.LazyItemsRow
 import com.example.jucrchallenge.ui.component.StatisticsTopBar
 import com.example.jucrchallenge.ui.component.nearbyPointsList
 import com.example.jucrchallenge.ui.theme.Primary
-
-enum class SwipingStates {
-    //our own enum class for stoppages e.g. expanded and collapsed
-    EXPANDED, COLLAPSED
-}
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMotionApi::class)
@@ -47,217 +43,227 @@ enum class SwipingStates {
 fun HomeScreen(homeModel: HomeScreenViewModel, mainModel: MainModel) {
 
     val mainState = mainModel.state
+    val homeState = homeModel.state
     val context = LocalContext.current
     val realAvailable = 1f - 0.7f
     val motionScene = remember {
         context.resources.openRawResource(R.raw.motion_scene).readBytes().decodeToString()
     }
-
-    // A surface container using the 'background' color from the theme
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-    ) {
-        val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
-        BoxWithConstraints(//to get the max height
-            modifier = Modifier.fillMaxSize()
+    if (homeState.loading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    }
+    else {
+        // A surface container using the 'background' color from the theme
+        Surface(
+            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
         ) {
-            val heightInPx = with(LocalDensity.current) { maxHeight.toPx() }
-            val nestedScrollConnection = remember {
-                object : NestedScrollConnection {
-                    override fun onPreScroll(
-                        available: Offset, source: NestedScrollSource
-                    ): Offset {
-                        val delta = available.y
-                        return if (delta < 0) {
-                            swipingState.performDrag(delta).toOffset()
-                        } else {
-                            Offset.Zero
-                        }
-                    }
-
-                    override fun onPostScroll(
-                        consumed: Offset, available: Offset, source: NestedScrollSource
-                    ): Offset {
-                        val delta = available.y
-                        return swipingState.performDrag(delta).toOffset()
-                    }
-
-                    override suspend fun onPostFling(
-                        consumed: Velocity, available: Velocity
-                    ): Velocity {
-                        swipingState.performFling(velocity = available.y)
-                        return super.onPostFling(consumed, available)
-                    }
-
-                    private fun Float.toOffset() = Offset(0f, this)
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .swipeable(
-                        state = swipingState, thresholds = { _, _ ->
-                            FractionalThreshold(0.05f)//it can be 0.5 in general
-                        }, orientation = Orientation.Vertical, anchors = mapOf(
-                            0f to SwipingStates.COLLAPSED,//min height is collapsed
-                            heightInPx to SwipingStates.EXPANDED,//max height is expanded
-                        )
-                    )
-                    .nestedScroll(nestedScrollConnection)
+            val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
+            BoxWithConstraints(//to get the max height
+                modifier = Modifier.fillMaxSize()
             ) {
-                val computedProgress by remember {//progress value will be decided as par state
-                    derivedStateOf {
-                        if (swipingState.progress.to == SwipingStates.COLLAPSED) swipingState.progress.fraction
-                        else 1f - swipingState.progress.fraction
+                val heightInPx = with(LocalDensity.current) { maxHeight.toPx() }
+                val nestedScrollConnection = remember {
+                    object : NestedScrollConnection {
+                        override fun onPreScroll(
+                            available: Offset, source: NestedScrollSource
+                        ): Offset {
+                            val delta = available.y
+                            return if (delta < 0) {
+                                swipingState.performDrag(delta).toOffset()
+                            } else {
+                                Offset.Zero
+                            }
+                        }
+
+                        override fun onPostScroll(
+                            consumed: Offset, available: Offset, source: NestedScrollSource
+                        ): Offset {
+                            val delta = available.y
+                            return swipingState.performDrag(delta).toOffset()
+                        }
+
+                        override suspend fun onPostFling(
+                            consumed: Velocity, available: Velocity
+                        ): Velocity {
+                            swipingState.performFling(velocity = available.y)
+                            return super.onPostFling(consumed, available)
+                        }
+
+                        private fun Float.toOffset() = Offset(0f, this)
                     }
                 }
-                val startHeightNum = 300
-                MotionLayout(
-                    modifier = Modifier.fillMaxSize(),
-                    motionScene = MotionScene(content = motionScene),
-                    progress = computedProgress,
-                ) {
 
-                    Box(
-                        modifier = Modifier
-                            .layoutId("body")
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-                            .background(Color.White, RoundedCornerShape(12.dp))
-                    ) {
-                        //Merged lazy column with lazy row and lazy column inside
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            items(1) {
-                                StatisticsTopBar(stringResource(R.string.statistics))
-                                Spacer(Modifier.height(24.dp))
-                            }
-                            item { LazyItemsRow() }
-                            items(1) {
-                                Spacer(Modifier.height(24.dp))
-                                StatisticsTopBar(
-                                    stringResource(R.string.nearby_supercharges), "View all"
-                                )
-                                Spacer(Modifier.height(12.dp))
-                            }
-                            nearbyPointsList("Calle 123", "4/10", 12.3f)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .swipeable(
+                            state = swipingState, thresholds = { _, _ ->
+                                FractionalThreshold(0.05f)//it can be 0.5 in general
+                            }, orientation = Orientation.Vertical, anchors = mapOf(
+                                0f to SwipingStates.COLLAPSED,//min height is collapsed
+                                heightInPx to SwipingStates.EXPANDED,//max height is expanded
+                            )
+                        )
+                        .nestedScroll(nestedScrollConnection)
+                ) {
+                    val computedProgress by remember {//progress value will be decided as par state
+                        derivedStateOf {
+                            if (swipingState.progress.to == SwipingStates.COLLAPSED) swipingState.progress.fraction
+                            else 1f - swipingState.progress.fraction
                         }
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .layoutId("header")
-                            .fillMaxWidth()
-                            .height(startHeightNum.dp)
-                            .background(Primary)
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .layoutId("canvas")
+                    val startHeightNum = 300
+                    MotionLayout(
+                        modifier = Modifier.fillMaxSize(),
+                        motionScene = MotionScene(content = motionScene),
+                        progress = computedProgress,
                     ) {
-                        Canvas(
+
+                        Box(
+                            modifier = Modifier
+                                .layoutId("body")
+                                .padding(horizontal = 16.dp)
+                                .fillMaxWidth()
+                                .background(Color.White, RoundedCornerShape(12.dp))
+                        ) {
+                            //Merged lazy column with lazy row and lazy column inside
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(1) {
+                                    StatisticsTopBar(stringResource(R.string.statistics))
+                                    Spacer(Modifier.height(24.dp))
+                                }
+                                item { LazyItemsRow(homeState.car) }
+                                items(1) {
+                                    Spacer(Modifier.height(24.dp))
+                                    StatisticsTopBar(
+                                        stringResource(R.string.nearby_supercharges), "View all"
+                                    )
+                                    Spacer(Modifier.height(12.dp))
+                                }
+                                nearbyPointsList("Calle 123", "4/10", 12.3f)
+                            }
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .layoutId("header")
+                                .fillMaxWidth()
+                                .height(startHeightNum.dp)
+                                .background(Primary)
+                        )
+
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(30.dp)
+                                .layoutId("canvas")
                         ) {
-                            val canvasWidth = size.width
-                            val canvasHeight = size.height
-                            val formWidth = (canvasWidth * 2)
-                            val xPos = canvasWidth / 2
-
-                            drawArc(
-                                Color.White,
-                                -180f,
-                                180f,
-                                useCenter = false,
-                                size = Size(formWidth, canvasHeight * 4),
-                                topLeft = Offset(x = -xPos, y = canvasHeight - 150)
-                            )
-                        }
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .layoutId("circle"),
-                        horizontalAlignment = Alignment.CenterHorizontally
-
-                    ) {
-                        Card(
-                            shape = RoundedCornerShape(100),
-                            modifier = Modifier
-                                .size(72.dp)
-                                .clip(CircleShape),
-                            border = BorderStroke(5.dp, Color.White),
-                            backgroundColor = Color.White
-                        ) {
-                            AndroidView(
-                                factory = { context ->
-                                    AvailableSpaceView(context).apply {
-                                        setAvailable(realAvailable)
-                                    }
-                                }, modifier = Modifier
+                            Canvas(
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(128.dp)
-                            )
+                                    .height(30.dp)
+                            ) {
+                                val canvasWidth = size.width
+                                val canvasHeight = size.height
+                                val formWidth = (canvasWidth * 2)
+                                val xPos = canvasWidth / 2
+
+                                drawArc(
+                                    Color.White,
+                                    -180f,
+                                    180f,
+                                    useCenter = false,
+                                    size = Size(formWidth, canvasHeight * 4),
+                                    topLeft = Offset(x = -xPos, y = canvasHeight - 150)
+                                )
+                            }
                         }
-                    }
-                    Text(
-                        text = stringResource(R.string.good_morning, mainState.user?.firstName ?: ""),
-                        color = Color.White,
-                        style = MaterialTheme.typography.body1,
-                        modifier = Modifier
-                            .layoutId("welcome_message")
-                            .alpha(alpha = 1f - computedProgress)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .layoutId("circle"),
+                            horizontalAlignment = Alignment.CenterHorizontally
 
-                    )
-                    Text(
-                        text = stringResource(R.string.charging_car),
-                        color = Color.White,
-                        style = MaterialTheme.typography.h1,
-                        fontSize = 20.sp,
-                        modifier = Modifier
-                            .layoutId("charging_message")
-                            .alpha(alpha = 1f - computedProgress)
-
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.tesla_x_white),
-                        contentDescription = "My car",
-                        modifier = Modifier
-                            .width(250.dp)
-                            .height(80.dp)
-                            .layoutId("content1")
-                    )
-
-
-                    Text(
-                        text = stringResource(R.string.time_to_end, 49.toString()),
-                        color = Color.White,
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier
-                            .layoutId("time_charge")
-                            .alpha(alpha = 1f - computedProgress)
-                    )
-
-
-                    Column(
-                        modifier = Modifier.layoutId("content3")
-                    ) {
+                        ) {
+                            Card(
+                                shape = RoundedCornerShape(100),
+                                modifier = Modifier
+                                    .size(72.dp)
+                                    .clip(CircleShape),
+                                border = BorderStroke(5.dp, Color.White),
+                                backgroundColor = Color.White
+                            ) {
+                                AndroidView(
+                                    factory = { context ->
+                                        AvailableSpaceView(context).apply {
+                                            setAvailable(realAvailable)
+                                        }
+                                    }, modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(128.dp)
+                                )
+                            }
+                        }
                         Text(
-                            text = "Tesla Model X",
-                            style = MaterialTheme.typography.h3,
-                            fontWeight = FontWeight.Bold,
+                            text = stringResource(
+                                R.string.good_morning,
+                                mainState.user?.firstName ?: ""
+                            ),
                             color = Color.White,
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier
+                                .layoutId("welcome_message")
+                                .alpha(alpha = 1f - computedProgress)
+
                         )
                         Text(
-                            text = stringResource(R.string.time_to_end_second, 49.toString()),
+                            text = stringResource(R.string.charging_car),
+                            color = Color.White,
+                            style = MaterialTheme.typography.h1,
+                            fontSize = 20.sp,
+                            modifier = Modifier
+                                .layoutId("charging_message")
+                                .alpha(alpha = 1f - computedProgress)
+
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.tesla_x_white),
+                            contentDescription = "My car",
+                            modifier = Modifier
+                                .width(250.dp)
+                                .height(80.dp)
+                                .layoutId("content1")
+                        )
+
+
+                        Text(
+                            text = stringResource(R.string.time_to_end, 49.toString()),
                             color = Color.White,
                             style = MaterialTheme.typography.body2,
+                            modifier = Modifier
+                                .layoutId("time_charge")
+                                .alpha(alpha = 1f - computedProgress)
                         )
+
+
+                        Column(
+                            modifier = Modifier.layoutId("content3")
+                        ) {
+                            Text(
+                                text = homeState.car?.carModel ?: "",
+                                style = MaterialTheme.typography.h3,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                            )
+                            Text(
+                                text = stringResource(R.string.time_to_end_second, 49.toString()),
+                                color = Color.White,
+                                style = MaterialTheme.typography.body2,
+                            )
+                        }
                     }
                 }
             }

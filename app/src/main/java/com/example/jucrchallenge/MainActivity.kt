@@ -7,6 +7,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.jucrchallenge.ui.main.MainModel
 import com.example.jucrchallenge.ui.router.Router
 import com.example.jucrchallenge.ui.theme.JUCRChallengeTheme
 import dagger.hilt.android.AndroidEntryPoint

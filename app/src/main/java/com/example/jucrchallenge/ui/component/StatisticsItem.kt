@@ -1,11 +1,10 @@
 package com.example.jucrchallenge.ui.component
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.RawRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -21,40 +20,66 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.jucrchallenge.R
-import com.example.jucrchallenge.ui.component.iconStatistics.*
-import com.example.jucrchallenge.ui.theme.Primary
+import com.example.jucrchallenge.domain.entities.Car
+import com.example.jucrchallenge.domain.enum.Escale.*
+import com.example.jucrchallenge.ui.theme.Danger
+import com.example.jucrchallenge.ui.theme.Success
+import com.example.jucrchallenge.ui.theme.Warning
 
-enum class iconStatistics {
-    VOLTAGE, REMAINING_CHARGE, FAST_CHARGE
-}
 
 @Composable
-fun LazyItemsRow() {
+fun LazyItemsRow(car: Car?) {
+    val carList = car?.statistics ?: emptyList()
+
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(200, key = { it }) {
+
+        items(carList) {
+            val value: Int
+            val escale: String
+            val icon: Int
+            val color: Color
+
+            when (it.scale) {
+                VOLTAGE -> {
+                    value = R.string.voltage
+                    escale = stringResource(R.string.volt)
+                    icon = R.drawable.ic_car_battery_solid
+                    color = Danger
+                }
+                REMAINING_CHARGE -> {
+                    value = R.string.remaining_charge
+                    escale = stringResource(R.string.km)
+                    icon = R.drawable.ic_battery_three_quarters_solid
+                    color = Success
+                }
+                FAST_CHARGE -> {
+                    value = R.string.fast_charge
+                    escale = stringResource(R.string.min)
+                    icon = R.drawable.ic_plug_circle_bolt_solid
+                    color = Warning
+                }
+            }
+
             StaticItem(
-                stringResource(R.string.n_volt, "240"),
-                stringResource(R.string.voltage),
-                icon = VOLTAGE
+                title ="${it.quantity} $escale",
+                subtitle = stringResource(value),
+                icon = icon,
+                color = color
             )
         }
     }
 }
 
 @Composable
-fun StaticItem(title: String, subtitle: String, icon: iconStatistics) {
-
-    val iconRes = when (icon) {
-        VOLTAGE -> R.drawable.ic_car_battery_solid
-        REMAINING_CHARGE -> R.drawable.ic_battery_three_quarters_solid
-        FAST_CHARGE -> R.drawable.ic_plug_circle_bolt_solid
-    }
+fun StaticItem(title: String, subtitle: String, icon: Int, color: Color) {
 
     Card(
-        shape = RoundedCornerShape(10), elevation = 4.dp, modifier = Modifier.width(150.dp),
+        shape = RoundedCornerShape(10), elevation = 4.dp, modifier = Modifier
+            .width(150.dp)
+            .height(155.dp),
 
         border = BorderStroke(5.dp, Color.White), backgroundColor = Color.White
     ) {
@@ -64,13 +89,13 @@ fun StaticItem(title: String, subtitle: String, icon: iconStatistics) {
                     modifier = Modifier
                         .size(45.dp)
                         .clip(CircleShape)
-                        .background(Primary.copy(alpha = 0.3f))
+                        .background(color.copy(alpha = 0.3f))
                         .padding(10.dp)
                 ) {
                     Icon(
-                        painter = painterResource(iconRes),
+                        painter = painterResource(icon),
                         modifier = Modifier.fillMaxSize(),
-                        tint = Primary,
+                        tint = color,
                         contentDescription = "Charge status",
                     )
                 }
