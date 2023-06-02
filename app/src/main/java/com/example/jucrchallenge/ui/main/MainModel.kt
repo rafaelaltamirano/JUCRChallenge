@@ -9,6 +9,7 @@ import com.example.jucrchallenge.ui.ViewModelWithStatus
 import com.example.jucrchallenge.usecases.MainUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -23,12 +24,21 @@ class MainModel @Inject constructor(
         private set
 
     init {
+        startSplash()
         requestUser()
     }
 
     private fun setLoading(loading: Boolean) {
         state = state.copy(loading = loading)
     }
+
+    private fun startSplash() {
+        viewModelScope.launch {
+            delay(5000)
+            setShowSplash(false)
+        }
+    }
+
 
     private fun setUser(user: User) {
         state = state.copy(user = user)
@@ -45,6 +55,11 @@ class MainModel @Inject constructor(
         } finally {
             setLoading(false)
         }
+    }
+
+
+    private fun setShowSplash(showSplash: Boolean){
+        state = state.copy(showSplash = showSplash)
     }
 
 }

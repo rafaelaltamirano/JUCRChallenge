@@ -1,5 +1,8 @@
 package com.example.jucrchallenge.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,49 +35,41 @@ fun DefineBottomNav(navController: NavController) {
 
     var value by remember { mutableStateOf(30f) }
     Slider(value = value, onValueChange = { value = it }, valueRange = 0f..100f)
-    BottomNavigation(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .graphicsLayer {
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                clip = true
-                shadowElevation = value
-            }
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        items.forEach { item ->
-            BottomNavigationItem(icon = {
-                Icon(
-                    painterResource(id = item.icon),
-                    contentDescription = item.title,
-                    modifier = Modifier.padding(24.dp)
-                )
-            },
-                selectedContentColor = Primary,
-                unselectedContentColor = Color.Black.copy(0.4f),
-                alwaysShowLabel = true,
-                selected = currentRoute == item.route,
-                onClick = {
-                    navController.navigate(item.route) {
+            BottomNavigation(modifier = Modifier
+                .fillMaxWidth()
+                .height(70.dp)
+                .graphicsLayer {
+                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                    clip = true
+                    shadowElevation = value
+                }) {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                items.forEach { item ->
+                    BottomNavigationItem(icon = {
+                        Icon(
+                            painterResource(id = item.icon),
+                            contentDescription = item.title,
+                            modifier = Modifier.padding(24.dp)
+                        )
+                    },
+                        selectedContentColor = Primary,
+                        unselectedContentColor = Color.Black.copy(0.4f),
+                        alwaysShowLabel = true,
+                        selected = currentRoute == item.route,
+                        onClick = {
+                            navController.navigate(item.route) {
 
-                        navController.graph.startDestinationRoute?.let { screen_route ->
-                            popUpTo(screen_route) {
-                                saveState = true
+                                navController.graph.startDestinationRoute?.let { screen_route ->
+                                    popUpTo(screen_route) {
+                                        saveState = true
+                                    }
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                })
-        }
-    }
-}
+                        })
+                }
+            }
 
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DefineBottomNav(rememberNavController())
 }

@@ -3,6 +3,7 @@ package com.example.jucrchallenge.ui.router
 import com.example.jucrchallenge.R
 
 enum class RouterDir (override val route: String, val icon: Int, val title: String) : Routers {
+    SPLASH("splash",R.drawable.ic_car_solid,"splash"),
     HOME("home",R.drawable.ic_car_solid,"home"),
     SCREEN_1("screen_1", R.drawable.ic_search, "screen_1"),
     SCREEN_2("screen_2", R.drawable.ic_map_solid, "screen_2"),
