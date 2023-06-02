@@ -16,7 +16,8 @@ import com.example.jucrchallenge.R
 @Composable
 fun StatisticsTopBar( title: String,
                       indicatorText :String? = null ) {
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+    Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically){
         Text(
             text = title,
             style = MaterialTheme.typography.h2,

@@ -16,5 +16,6 @@ val Danger = Color(0xFFE84360)
 val Warning = Color(0xFFF4B759)
 
 val GrayLight = Color(0xFFFAFAFA)
+val White = Color(0xFFFFFFFF)
 
 

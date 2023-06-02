@@ -55,9 +55,9 @@ fun HomeScreen(homeModel: HomeScreenViewModel, mainModel: MainModel) {
         }
     }
     else {
-        // A surface container using the 'background' color from the theme
         Surface(
-            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
         ) {
             val swipingState = rememberSwipeableState(initialValue = SwipingStates.EXPANDED)
             BoxWithConstraints(//to get the max height
@@ -140,7 +140,8 @@ fun HomeScreen(homeModel: HomeScreenViewModel, mainModel: MainModel) {
                                 items(1) {
                                     Spacer(Modifier.height(24.dp))
                                     StatisticsTopBar(
-                                        stringResource(R.string.nearby_supercharges), "View all"
+                                        stringResource(R.string.nearby_supercharges),
+                                        "View all"
                                     )
                                     Spacer(Modifier.height(12.dp))
                                 }
